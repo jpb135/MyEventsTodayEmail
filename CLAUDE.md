@@ -102,6 +102,20 @@ clasp logs
 clasp deploy
 ```
 
+### **Testing Commands**
+Execute these functions in the Google Apps Script editor or via clasp:
+
+```javascript
+// Run all tests (comprehensive suite)
+runAllTests()
+
+// Run only unit tests
+runAllUnitTests()
+
+// Run only integration tests  
+runAllIntegrationTests()
+```
+
 ## Monitoring & Analytics
 
 ### **Execution Tracking**
