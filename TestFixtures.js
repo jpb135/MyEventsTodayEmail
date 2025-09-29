@@ -344,17 +344,16 @@ class TestFixtures {
   
   // Date ranges for testing
   static getTestDates() {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    // Use fixed timestamps to avoid infinite recursion when Date is mocked
+    const baseTimestamp = 1673740800000; // January 15, 2023 (Sunday) 00:00:00 UTC
+    const today = new Date(baseTimestamp);
     
-    const tomorrow = new Date(today);
-    tomorrow.setDate(today.getDate() + 1);
+    const tomorrow = new Date(baseTimestamp + 24 * 60 * 60 * 1000);
     
-    const nextWeek = new Date(today);
-    nextWeek.setDate(today.getDate() + 7);
+    const nextWeek = new Date(baseTimestamp + 7 * 24 * 60 * 60 * 1000);
     
-    const thisWeekStart = new Date(today);
-    thisWeekStart.setDate(today.getDate() - today.getDay()); // Start of current week (Sunday)
+    // January 15, 2023 is a Sunday, so thisWeekStart is the same as today
+    const thisWeekStart = new Date(baseTimestamp);
     
     return {
       today,

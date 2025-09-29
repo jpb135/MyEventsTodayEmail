@@ -76,8 +76,8 @@ function runAllTests() {
     results.integrationTests = runAllIntegrationTests();
     
     // Calculate totals
-    results.totalPassed = results.unitTests.totalPassed + results.integrationTests.totalPassed;
-    results.totalFailed = results.unitTests.totalFailed + results.integrationTests.totalFailed;
+    results.totalPassed = (results.unitTests?.totalPassed || 0) + (results.integrationTests?.totalPassed || 0);
+    results.totalFailed = (results.unitTests?.totalFailed || 0) + (results.integrationTests?.totalFailed || 0);
     results.totalDuration = new Date() - startTime;
     results.success = results.totalFailed === 0;
     
@@ -93,8 +93,8 @@ function runAllTests() {
     Logger.log(`   Total Duration: ${Math.round(results.totalDuration)}ms`);
     Logger.log(`   Success Rate: ${Math.round((results.totalPassed / (results.totalPassed + results.totalFailed)) * 100)}%`);
     
-    Logger.log(`\n📋 UNIT TESTS: ${results.unitTests.totalPassed} passed, ${results.unitTests.totalFailed} failed`);
-    Logger.log(`🔗 INTEGRATION TESTS: ${results.integrationTests.totalPassed} passed, ${results.integrationTests.totalFailed} failed`);
+    Logger.log(`\n📋 UNIT TESTS: ${results.unitTests?.totalPassed || 0} passed, ${results.unitTests?.totalFailed || 0} failed`);
+    Logger.log(`🔗 INTEGRATION TESTS: ${results.integrationTests?.totalPassed || 0} passed, ${results.integrationTests?.totalFailed || 0} failed`);
     
     if (results.success) {
       Logger.log('\n🎉 ALL TESTS PASSED! 🎉');
@@ -105,8 +105,8 @@ function runAllTests() {
       
       // List failed test suites
       const failedSuites = [
-        ...results.unitTests.suiteResults.filter(s => s.failed > 0),
-        ...results.integrationTests.suiteResults.filter(s => s.failed > 0)
+        ...(results.unitTests?.suiteResults?.filter(s => s.failed > 0) || []),
+        ...(results.integrationTests?.suiteResults?.filter(s => s.failed > 0) || [])
       ];
       
       if (failedSuites.length > 0) {

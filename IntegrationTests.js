@@ -18,15 +18,20 @@ function createConfigurationIntegrationTestSuite() {
   suite.test('loadConfiguration - successful load with valid data', () => {
     const validData = TestFixtures.getValidSpreadsheetData();
     
-    // Mock Config service
-    this.Config = {
-      get: (key) => {
-        switch(key) {
-          case 'SPREADSHEET_ID': return 'test-spreadsheet-id';
-          case 'CONFIG_SHEET_NAME': return 'Config';
-          default: return null;
+    // Mock PropertiesService for ConfigurationManager
+    this.PropertiesService = {
+      getScriptProperties: () => ({
+        getProperty: (key) => {
+          switch(key) {
+            case 'SPREADSHEET_ID': return 'test-spreadsheet-id';
+            case 'CONFIG_SHEET_NAME': return 'Config';
+            default: return null;
+          }
         }
-      }
+      }),
+      getUserProperties: () => ({
+        getProperty: () => null
+      })
     };
     
     // Mock SpreadsheetApp with valid data
@@ -53,15 +58,20 @@ function createConfigurationIntegrationTestSuite() {
   });
   
   suite.test('loadConfiguration - handles multiple calendars per recipient', () => {
-    // Mock Config service
-    this.Config = {
-      get: (key) => {
-        switch(key) {
-          case 'SPREADSHEET_ID': return 'test-spreadsheet-id';
-          case 'CONFIG_SHEET_NAME': return 'Config';
-          default: return null;
+    // Mock PropertiesService for ConfigurationManager
+    this.PropertiesService = {
+      getScriptProperties: () => ({
+        getProperty: (key) => {
+          switch(key) {
+            case 'SPREADSHEET_ID': return 'test-spreadsheet-id';
+            case 'CONFIG_SHEET_NAME': return 'Config';
+            default: return null;
+          }
         }
-      }
+      }),
+      getUserProperties: () => ({
+        getProperty: () => null
+      })
     };
     
     // Mock data with multiple calendars
