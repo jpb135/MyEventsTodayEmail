@@ -107,15 +107,20 @@ function createConfigurationValidationTestSuite() {
   });
   
   suite.test('Config.validateConfiguration - all required present', () => {
-    // Setup mock configuration
-    this.Config = {
-      get: (key) => {
-        switch(key) {
-          case 'SPREADSHEET_ID': return '1abc123def456ghi';
-          case 'CONFIG_SHEET_NAME': return 'Config';
-          default: return null;
+    // Setup mock PropertiesService
+    this.PropertiesService = {
+      getScriptProperties: () => ({
+        getProperty: (key) => {
+          switch(key) {
+            case 'SPREADSHEET_ID': return '1abc123def456ghi';
+            case 'CONFIG_SHEET_NAME': return 'Config';
+            default: return null;
+          }
         }
-      }
+      }),
+      getUserProperties: () => ({
+        getProperty: () => null
+      })
     };
     
     const config = new ConfigurationManager();
@@ -127,13 +132,18 @@ function createConfigurationValidationTestSuite() {
   });
   
   suite.test('Config.validateConfiguration - missing spreadsheet ID', () => {
-    this.Config = {
-      get: (key) => {
-        switch(key) {
-          case 'CONFIG_SHEET_NAME': return 'Config';
-          default: return null; // Missing SPREADSHEET_ID
+    this.PropertiesService = {
+      getScriptProperties: () => ({
+        getProperty: (key) => {
+          switch(key) {
+            case 'CONFIG_SHEET_NAME': return 'Config';
+            default: return null; // Missing SPREADSHEET_ID
+          }
         }
-      }
+      }),
+      getUserProperties: () => ({
+        getProperty: () => null
+      })
     };
     
     const config = new ConfigurationManager();

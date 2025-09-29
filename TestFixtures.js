@@ -114,7 +114,7 @@ class MockUtilities {
   
   static restoreGoogleAppsScriptServices(originalServices) {
     for (const [serviceName, originalService] of Object.entries(originalServices)) {
-      global[serviceName] = originalService;
+      this[serviceName] = originalService;
     }
   }
 }

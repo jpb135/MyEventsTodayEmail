@@ -372,7 +372,7 @@ function createExecutionTrackerTestSuite() {
     
     const summary = tracker.getSummary();
     
-    Assert.type(summary.executionTimeMs, 'number', 'Summary should include execution time in ms');
+    Assert.equal(typeof summary.executionTimeMs, 'number', 'Summary should include execution time in ms');
     Assert.truthy(summary.executionTimeFormatted, 'Summary should include formatted execution time');
     Assert.equal(summary.metrics.calendarsProcessed, 1, 'Summary should include metrics');
     Assert.truthy(summary.quotaUsage, 'Summary should include quota usage');

@@ -174,9 +174,10 @@ For security reasons, the spreadsheet ID should never be hardcoded in the source
 function validateRecipientData(email, calendarId) {
   const errors = [];
   
-  // Email validation (more strict - no consecutive dots, valid characters)
-  const emailRegex = /^[a-zA-Z0-9]([a-zA-Z0-9._-]*[a-zA-Z0-9])?@[a-zA-Z0-9]([a-zA-Z0-9.-]*[a-zA-Z0-9])?\.[a-zA-Z]{2,}$/;
-  if (!email || typeof email !== 'string' || !emailRegex.test(email)) {
+  // Email validation (allows + but rejects consecutive dots)
+  const emailRegex = /^[a-zA-Z0-9]([a-zA-Z0-9._+-]*[a-zA-Z0-9])?@[a-zA-Z0-9]([a-zA-Z0-9.-]*[a-zA-Z0-9])?\.[a-zA-Z]{2,}$/;
+  const hasConsecutiveDots = /\.\./.test(email);
+  if (!email || typeof email !== 'string' || !emailRegex.test(email) || hasConsecutiveDots) {
     errors.push(`Invalid email format: "${email}"`);
   }
   
@@ -408,17 +409,17 @@ function filterEventsByKeywords(events, filterKeywords = []) {
     const location = event.getLocation().toLowerCase();
     const eventText = `${title} ${description} ${location}`;
     
-    // Check if any keyword matches (include mode)
-    return filterKeywords.some(keyword => {
-      if (keyword.startsWith('-')) {
-        // Exclude mode: event should NOT contain this keyword
-        const excludeKeyword = keyword.substring(1).toLowerCase();
-        return !eventText.includes(excludeKeyword);
-      } else {
-        // Include mode: event should contain this keyword
-        return eventText.includes(keyword.toLowerCase());
-      }
-    });
+    // Separate include and exclude keywords
+    const includeKeywords = filterKeywords.filter(k => !k.startsWith('-')).map(k => k.toLowerCase());
+    const excludeKeywords = filterKeywords.filter(k => k.startsWith('-')).map(k => k.substring(1).toLowerCase());
+    
+    // All include keywords must be found
+    const includesMatch = includeKeywords.length === 0 || includeKeywords.every(keyword => eventText.includes(keyword));
+    
+    // No exclude keywords should be found
+    const excludesMatch = excludeKeywords.every(keyword => !eventText.includes(keyword));
+    
+    return includesMatch && excludesMatch;
   });
 }
 
