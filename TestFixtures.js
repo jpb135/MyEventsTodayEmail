@@ -5,6 +5,120 @@
  * used throughout the test suite.
  */
 
+// Mock utilities for Google Apps Script services
+class MockUtilities {
+  static createMockEvent(title, startTime, endTime, location = '', description = '') {
+    return {
+      getTitle: () => title,
+      getStartTime: () => startTime,
+      getEndTime: () => endTime,
+      getLocation: () => location,
+      getDescription: () => description
+    };
+  }
+  
+  static createMockCalendar(name, events = []) {
+    return {
+      getName: () => name,
+      getEvents: (startDate, endDate) => {
+        // Filter events within the date range
+        return events.filter(event => {
+          const eventStart = event.getStartTime();
+          return eventStart >= startDate && eventStart < endDate;
+        });
+      }
+    };
+  }
+  
+  static createMockSpreadsheetData(headers, rows) {
+    return {
+      getDataRange: () => ({
+        getValues: () => [headers, ...rows]
+      }),
+      getSheetByName: (name) => name === 'Sheet1' ? MockUtilities.createMockSpreadsheetData(headers, rows) : null
+    };
+  }
+  
+  static mockGoogleAppsScriptServices() {
+    // Store original services if they exist
+    const originalServices = {};
+    
+    // Mock CalendarApp
+    if (typeof CalendarApp !== 'undefined') {
+      originalServices.CalendarApp = CalendarApp;
+    }
+    
+    global.CalendarApp = {
+      getCalendarById: (id) => {
+        // Return mock calendars based on ID
+        if (id === 'test@example.com') {
+          return MockUtilities.createMockCalendar('Test Calendar', [
+            MockUtilities.createMockEvent('Meeting', new Date(2023, 0, 1, 10, 0), new Date(2023, 0, 1, 11, 0), 'Conference Room', 'Important meeting'),
+            MockUtilities.createMockEvent('Lunch', new Date(2023, 0, 1, 12, 0), new Date(2023, 0, 1, 13, 0), 'Restaurant', 'Team lunch')
+          ]);
+        }
+        return null;
+      }
+    };
+    
+    // Mock SpreadsheetApp
+    if (typeof SpreadsheetApp !== 'undefined') {
+      originalServices.SpreadsheetApp = SpreadsheetApp;
+    }
+    
+    global.SpreadsheetApp = {
+      openById: (id) => MockUtilities.createMockSpreadsheetData(
+        ['Recipient Email', 'Calendar ID', 'Timezone', 'Time Format'],
+        [['test@example.com', 'test@example.com', 'America/New_York', '24h']]
+      )
+    };
+    
+    // Mock MailApp
+    if (typeof MailApp !== 'undefined') {
+      originalServices.MailApp = MailApp;
+    }
+    
+    global.MailApp = {
+      sendEmail: (options) => {
+        Logger.log(`Mock email sent to: ${options.to || 'unknown'}`);
+        Logger.log(`Subject: ${options.subject || 'no subject'}`);
+        return true;
+      }
+    };
+    
+    // Mock Session
+    if (typeof Session !== 'undefined') {
+      originalServices.Session = Session;
+    }
+    
+    global.Session = {
+      getActiveUser: () => ({
+        getEmail: () => 'admin@example.com'
+      })
+    };
+    
+    // Mock Utilities
+    if (typeof Utilities !== 'undefined') {
+      originalServices.Utilities = Utilities;
+    }
+    
+    global.Utilities = {
+      sleep: (ms) => {
+        // In tests, we don't actually want to sleep
+        Logger.log(`Mock sleep: ${ms}ms`);
+      }
+    };
+    
+    return originalServices;
+  }
+  
+  static restoreGoogleAppsScriptServices(originalServices) {
+    for (const [serviceName, originalService] of Object.entries(originalServices)) {
+      global[serviceName] = originalService;
+    }
+  }
+}
+
 class TestFixtures {
   
   // Sample spreadsheet configurations for testing
