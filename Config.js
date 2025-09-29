@@ -276,8 +276,8 @@ function runInitialSetup() {
   Logger.log('🔧 Running initial configuration setup...');
   
   // You MUST update these values for your environment
-  const SPREADSHEET_ID = 'YOUR_SPREADSHEET_ID_HERE'; // Replace with actual ID
-  const SHEET_NAME = 'Config'; // Or your preferred sheet name
+  const SPREADSHEET_ID = '1L-dcfFMEubvKnaLhMUTEq1mmBGlMAaynTJWFTvfhzKo'; // Replace with actual ID
+  const SHEET_NAME = 'Sheet1'; // Or your preferred sheet name
   
   if (SPREADSHEET_ID === 'YOUR_SPREADSHEET_ID_HERE') {
     throw new Error(`
