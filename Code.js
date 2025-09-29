@@ -953,9 +953,7 @@ function sendDailyEventSummary() {
         to: recipientEmail,
         subject: subject,
         body: emailContent.textBody,
-        options: {
-          htmlBody: emailContent.htmlBody
-        }
+        options: {}
       });
       
       // Log any partial errors
