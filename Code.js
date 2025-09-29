@@ -174,8 +174,8 @@ For security reasons, the spreadsheet ID should never be hardcoded in the source
 function validateRecipientData(email, calendarId) {
   const errors = [];
   
-  // Email validation
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  // Email validation (more strict - no consecutive dots, valid characters)
+  const emailRegex = /^[a-zA-Z0-9]([a-zA-Z0-9._-]*[a-zA-Z0-9])?@[a-zA-Z0-9]([a-zA-Z0-9.-]*[a-zA-Z0-9])?\.[a-zA-Z]{2,}$/;
   if (!email || typeof email !== 'string' || !emailRegex.test(email)) {
     errors.push(`Invalid email format: "${email}"`);
   }
@@ -412,11 +412,11 @@ function filterEventsByKeywords(events, filterKeywords = []) {
     return filterKeywords.some(keyword => {
       if (keyword.startsWith('-')) {
         // Exclude mode: event should NOT contain this keyword
-        const excludeKeyword = keyword.substring(1);
+        const excludeKeyword = keyword.substring(1).toLowerCase();
         return !eventText.includes(excludeKeyword);
       } else {
         // Include mode: event should contain this keyword
-        return eventText.includes(keyword);
+        return eventText.includes(keyword.toLowerCase());
       }
     });
   });

@@ -48,7 +48,7 @@ class MockUtilities {
       originalServices.CalendarApp = CalendarApp;
     }
     
-    global.CalendarApp = {
+    this.CalendarApp = {
       getCalendarById: (id) => {
         // Return mock calendars based on ID
         if (id === 'test@example.com') {
@@ -66,7 +66,7 @@ class MockUtilities {
       originalServices.SpreadsheetApp = SpreadsheetApp;
     }
     
-    global.SpreadsheetApp = {
+    this.SpreadsheetApp = {
       openById: (id) => MockUtilities.createMockSpreadsheetData(
         ['Recipient Email', 'Calendar ID', 'Timezone', 'Time Format'],
         [['test@example.com', 'test@example.com', 'America/New_York', '24h']]
@@ -78,7 +78,7 @@ class MockUtilities {
       originalServices.MailApp = MailApp;
     }
     
-    global.MailApp = {
+    this.MailApp = {
       sendEmail: (options) => {
         Logger.log(`Mock email sent to: ${options.to || 'unknown'}`);
         Logger.log(`Subject: ${options.subject || 'no subject'}`);
@@ -91,7 +91,7 @@ class MockUtilities {
       originalServices.Session = Session;
     }
     
-    global.Session = {
+    this.Session = {
       getActiveUser: () => ({
         getEmail: () => 'admin@example.com'
       })
@@ -102,7 +102,7 @@ class MockUtilities {
       originalServices.Utilities = Utilities;
     }
     
-    global.Utilities = {
+    this.Utilities = {
       sleep: (ms) => {
         // In tests, we don't actually want to sleep
         Logger.log(`Mock sleep: ${ms}ms`);

@@ -186,16 +186,16 @@ function createFrequencyTestSuite() {
       
       // Mock the current date
       const originalDate = Date;
-      global.Date = function(...args) {
+      this.Date = function(...args) {
         if (args.length === 0) {
           return testDate;
         }
         return new originalDate(...args);
       };
-      global.Date.prototype = originalDate.prototype;
+      this.Date.prototype = originalDate.prototype;
       
       const result = shouldSendEmail('daily');
-      global.Date = originalDate; // Restore
+      this.Date = originalDate; // Restore
       
       Assert.equal(result, expected, `Daily frequency should be ${expected} for ${dateKey}`);
     }
@@ -213,16 +213,16 @@ function createFrequencyTestSuite() {
       
       // Mock the current date
       const originalDate = Date;
-      global.Date = function(...args) {
+      this.Date = function(...args) {
         if (args.length === 0) {
           return testDate;
         }
         return new originalDate(...args);
       };
-      global.Date.prototype = originalDate.prototype;
+      this.Date.prototype = originalDate.prototype;
       
       const result = shouldSendEmail('weekdays');
-      global.Date = originalDate; // Restore
+      this.Date = originalDate; // Restore
       
       Assert.equal(result, expected, `Weekdays frequency should be ${expected} for ${dateKey}`);
     }
@@ -240,16 +240,16 @@ function createFrequencyTestSuite() {
       
       // Mock the current date
       const originalDate = Date;
-      global.Date = function(...args) {
+      this.Date = function(...args) {
         if (args.length === 0) {
           return testDate;
         }
         return new originalDate(...args);
       };
-      global.Date.prototype = originalDate.prototype;
+      this.Date.prototype = originalDate.prototype;
       
       const result = shouldSendEmail('monday');
-      global.Date = originalDate; // Restore
+      this.Date = originalDate; // Restore
       
       Assert.equal(result, expected, `Monday frequency should be ${expected} for ${dateKey}`);
     }
@@ -267,16 +267,16 @@ function createFrequencyTestSuite() {
       
       // Mock the current date
       const originalDate = Date;
-      global.Date = function(...args) {
+      this.Date = function(...args) {
         if (args.length === 0) {
           return testDate;
         }
         return new originalDate(...args);
       };
-      global.Date.prototype = originalDate.prototype;
+      this.Date.prototype = originalDate.prototype;
       
       const result = shouldSendEmail('weekends');
-      global.Date = originalDate; // Restore
+      this.Date = originalDate; // Restore
       
       Assert.equal(result, expected, `Weekends frequency should be ${expected} for ${dateKey}`);
     }
@@ -290,16 +290,16 @@ function createFrequencyTestSuite() {
       
       // Mock the current date
       const originalDate = Date;
-      global.Date = function(...args) {
+      this.Date = function(...args) {
         if (args.length === 0) {
           return testDate;
         }
         return new originalDate(...args);
       };
-      global.Date.prototype = originalDate.prototype;
+      this.Date.prototype = originalDate.prototype;
       
       const result = shouldSendEmail('never');
-      global.Date = originalDate; // Restore
+      this.Date = originalDate; // Restore
       
       Assert.false(result, `Never frequency should always be false for ${dateKey}`);
     }

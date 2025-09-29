@@ -118,7 +118,7 @@ function createEmailGenerationTestSuite() {
     Assert.contains(result, '<!DOCTYPE html>', 'Should be valid HTML document');
     Assert.contains(result, '<html>', 'Should contain html tag');
     Assert.contains(result, '<head>', 'Should contain head section');
-    Assert.contains(result, '<body>', 'Should contain body section');
+    Assert.contains(result, '<body', 'Should contain body section');
     Assert.contains(result, 'Hello john!', 'Should contain personalized greeting');
     Assert.contains(result, 'Test Meeting', 'Should contain event title');
     Assert.contains(result, 'Conference Room', 'Should contain location');
@@ -372,7 +372,7 @@ function createExecutionTrackerTestSuite() {
     
     const summary = tracker.getSummary();
     
-    Assert.truthy(summary.executionTimeMs, 'Summary should include execution time in ms');
+    Assert.type(summary.executionTimeMs, 'number', 'Summary should include execution time in ms');
     Assert.truthy(summary.executionTimeFormatted, 'Summary should include formatted execution time');
     Assert.equal(summary.metrics.calendarsProcessed, 1, 'Summary should include metrics');
     Assert.truthy(summary.quotaUsage, 'Summary should include quota usage');

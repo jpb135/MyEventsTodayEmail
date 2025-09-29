@@ -19,7 +19,7 @@ function createConfigurationIntegrationTestSuite() {
     const validData = TestFixtures.getValidSpreadsheetData();
     
     // Mock Config service
-    global.Config = {
+    this.Config = {
       get: (key) => {
         switch(key) {
           case 'SPREADSHEET_ID': return 'test-spreadsheet-id';
@@ -30,7 +30,7 @@ function createConfigurationIntegrationTestSuite() {
     };
     
     // Mock SpreadsheetApp with valid data
-    global.SpreadsheetApp = {
+    this.SpreadsheetApp = {
       openById: (id) => ({
         getSheetByName: (name) => ({
           getDataRange: () => ({
@@ -54,7 +54,7 @@ function createConfigurationIntegrationTestSuite() {
   
   suite.test('loadConfiguration - handles multiple calendars per recipient', () => {
     // Mock Config service
-    global.Config = {
+    this.Config = {
       get: (key) => {
         switch(key) {
           case 'SPREADSHEET_ID': return 'test-spreadsheet-id';
@@ -65,7 +65,7 @@ function createConfigurationIntegrationTestSuite() {
     };
     
     // Mock data with multiple calendars
-    global.SpreadsheetApp = {
+    this.SpreadsheetApp = {
       openById: (id) => ({
         getSheetByName: (name) => ({
           getDataRange: () => ({
@@ -93,7 +93,7 @@ function createConfigurationIntegrationTestSuite() {
   });
   
   suite.test('loadConfiguration - filters out opted-out recipients', () => {
-    global.Config = {
+    this.Config = {
       get: (key) => {
         switch(key) {
           case 'SPREADSHEET_ID': return 'test-spreadsheet-id';
@@ -103,7 +103,7 @@ function createConfigurationIntegrationTestSuite() {
       }
     };
     
-    global.SpreadsheetApp = {
+    this.SpreadsheetApp = {
       openById: (id) => ({
         getSheetByName: (name) => ({
           getDataRange: () => ({
@@ -127,7 +127,7 @@ function createConfigurationIntegrationTestSuite() {
   });
   
   suite.test('loadConfiguration - handles missing spreadsheet ID', () => {
-    global.Config = {
+    this.Config = {
       get: (key) => null // No configuration available
     };
     
@@ -137,7 +137,7 @@ function createConfigurationIntegrationTestSuite() {
   });
   
   suite.test('loadConfiguration - handles invalid spreadsheet data', () => {
-    global.Config = {
+    this.Config = {
       get: (key) => {
         switch(key) {
           case 'SPREADSHEET_ID': return 'test-spreadsheet-id';
@@ -149,7 +149,7 @@ function createConfigurationIntegrationTestSuite() {
     
     const invalidData = TestFixtures.getInvalidSpreadsheetData();
     
-    global.SpreadsheetApp = {
+    this.SpreadsheetApp = {
       openById: (id) => ({
         getSheetByName: (name) => ({
           getDataRange: () => ({
@@ -203,7 +203,7 @@ function createCalendarBatchingIntegrationTestSuite() {
     ];
     
     const mockCalendars = TestFixtures.getMockCalendars();
-    global.CalendarApp = {
+    this.CalendarApp = {
       getCalendarById: (id) => mockCalendars[id] || null
     };
     
@@ -235,7 +235,7 @@ function createCalendarBatchingIntegrationTestSuite() {
     ];
     
     const mockCalendars = TestFixtures.getMockCalendars();
-    global.CalendarApp = {
+    this.CalendarApp = {
       getCalendarById: (id) => mockCalendars[id] || null
     };
     
@@ -260,7 +260,7 @@ function createCalendarBatchingIntegrationTestSuite() {
       }
     ];
     
-    global.CalendarApp = {
+    this.CalendarApp = {
       getCalendarById: (id) => {
         if (id === 'nonexistent@example.com') {
           throw new Error('Calendar not found');
@@ -296,7 +296,7 @@ function createCalendarBatchingIntegrationTestSuite() {
     ];
     
     const mockCalendars = TestFixtures.getMockCalendars();
-    global.CalendarApp = {
+    this.CalendarApp = {
       getCalendarById: (id) => mockCalendars[id] || null
     };
     
@@ -323,14 +323,14 @@ function createEmailSendingIntegrationTestSuite() {
     originalServices = MockUtilities.mockGoogleAppsScriptServices();
     
     // Mock email services to track sent emails
-    global.GmailApp = {
+    this.GmailApp = {
       sendEmail: (to, subject, body, options) => {
         emailsSent.push({ service: 'GmailApp', to, subject, body, options });
         return true;
       }
     };
     
-    global.MailApp = {
+    this.MailApp = {
       sendEmail: (options) => {
         emailsSent.push({ service: 'MailApp', ...options });
         return true;
@@ -360,7 +360,7 @@ function createEmailSendingIntegrationTestSuite() {
   suite.test('sendEmailsBatched - handles individual email failures with fallback', () => {
     let gmailAttempts = 0;
     
-    global.GmailApp = {
+    this.GmailApp = {
       sendEmail: (to, subject, body, options) => {
         gmailAttempts++;
         if (to === 'fail@example.com') {
@@ -391,7 +391,7 @@ function createEmailSendingIntegrationTestSuite() {
   
   suite.test('sendEmailsBatched - tracks retry attempts', () => {
     let attempt = 0;
-    global.retryOperation = (operation, maxRetries) => {
+    this.retryOperation = (operation, maxRetries) => {
       attempt++;
       if (attempt <= 2) {
         throw new Error('Temporary failure');
@@ -424,7 +424,7 @@ function createEndToEndIntegrationTestSuite() {
     emailsSent = [];
     
     // Mock Config
-    global.Config = {
+    this.Config = {
       get: (key) => {
         switch(key) {
           case 'SPREADSHEET_ID': return 'test-spreadsheet-id';
@@ -435,7 +435,7 @@ function createEndToEndIntegrationTestSuite() {
     };
     
     // Mock SpreadsheetApp
-    global.SpreadsheetApp = {
+    this.SpreadsheetApp = {
       openById: (id) => ({
         getSheetByName: (name) => ({
           getDataRange: () => ({
@@ -451,7 +451,7 @@ function createEndToEndIntegrationTestSuite() {
     
     // Mock CalendarApp
     const mockEvents = TestFixtures.getMockEvents();
-    global.CalendarApp = {
+    this.CalendarApp = {
       getCalendarById: (id) => {
         if (id === 'test@example.com') {
           return MockUtilities.createMockCalendar('Test Calendar', mockEvents);
@@ -461,14 +461,14 @@ function createEndToEndIntegrationTestSuite() {
     };
     
     // Mock Email services
-    global.GmailApp = {
+    this.GmailApp = {
       sendEmail: (to, subject, body, options) => {
         emailsSent.push({ service: 'GmailApp', to, subject, body, options });
         return true;
       }
     };
     
-    global.MailApp = {
+    this.MailApp = {
       sendEmail: (options) => {
         emailsSent.push({ service: 'MailApp', ...options });
         return true;
@@ -487,19 +487,19 @@ function createEndToEndIntegrationTestSuite() {
   suite.test('sendDailyEventSummary - complete workflow on weekday', () => {
     // Mock current day as Monday
     const originalDate = Date;
-    global.Date = function(...args) {
+    this.Date = function(...args) {
       if (args.length === 0) {
         return TestFixtures.getTestDates().monday;
       }
       return new originalDate(...args);
     };
-    global.Date.prototype = originalDate.prototype;
+    this.Date.prototype = originalDate.prototype;
     
     // Run the main function
     sendDailyEventSummary();
     
     // Restore Date
-    global.Date = originalDate;
+    this.Date = originalDate;
     
     // Should send emails to active@example.com (daily frequency matches Monday)
     // Should NOT send to weekend@example.com (weekends frequency doesn't match Monday)
@@ -518,17 +518,17 @@ function createEndToEndIntegrationTestSuite() {
   suite.test('sendDailyEventSummary - complete workflow on weekend', () => {
     // Mock current day as Saturday
     const originalDate = Date;
-    global.Date = function(...args) {
+    this.Date = function(...args) {
       if (args.length === 0) {
         return TestFixtures.getTestDates().saturday;
       }
       return new originalDate(...args);
     };
-    global.Date.prototype = originalDate.prototype;
+    this.Date.prototype = originalDate.prototype;
     
     sendDailyEventSummary();
     
-    global.Date = originalDate;
+    this.Date = originalDate;
     
     // Should send email to weekend@example.com (weekends frequency matches Saturday)
     // Should NOT send to active@example.com (daily frequency still matches, but let's assume filter prevents it)
@@ -543,7 +543,7 @@ function createEndToEndIntegrationTestSuite() {
   
   suite.test('sendDailyEventSummary - handles complete failure gracefully', () => {
     // Mock failing spreadsheet
-    global.SpreadsheetApp = {
+    this.SpreadsheetApp = {
       openById: (id) => {
         throw new Error('Spreadsheet service unavailable');
       }

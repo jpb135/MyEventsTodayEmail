@@ -108,7 +108,7 @@ function createConfigurationValidationTestSuite() {
   
   suite.test('Config.validateConfiguration - all required present', () => {
     // Setup mock configuration
-    global.Config = {
+    this.Config = {
       get: (key) => {
         switch(key) {
           case 'SPREADSHEET_ID': return '1abc123def456ghi';
@@ -127,7 +127,7 @@ function createConfigurationValidationTestSuite() {
   });
   
   suite.test('Config.validateConfiguration - missing spreadsheet ID', () => {
-    global.Config = {
+    this.Config = {
       get: (key) => {
         switch(key) {
           case 'CONFIG_SHEET_NAME': return 'Config';
@@ -148,7 +148,7 @@ function createConfigurationValidationTestSuite() {
     const config = new ConfigurationManager();
     
     // Mock properties service
-    global.PropertiesService = {
+    this.PropertiesService = {
       getScriptProperties: () => ({
         getProperty: (key) => key === 'TEST_KEY' ? 'test_value' : null
       }),
@@ -168,7 +168,7 @@ function createConfigurationValidationTestSuite() {
     const config = new ConfigurationManager();
     
     // Mock empty properties service
-    global.PropertiesService = {
+    this.PropertiesService = {
       getScriptProperties: () => ({
         getProperty: () => null
       }),
@@ -184,7 +184,7 @@ function createConfigurationValidationTestSuite() {
   suite.test('Config.set and get - script properties', () => {
     let storedValue = null;
     
-    global.PropertiesService = {
+    this.PropertiesService = {
       getScriptProperties: () => ({
         getProperty: (key) => key === 'TEST_SET_KEY' ? storedValue : null,
         setProperty: (key, value) => {

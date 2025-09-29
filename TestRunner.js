@@ -144,11 +144,11 @@ function runSmokeTests() {
   
   smokeTestSuite.test('Configuration can be loaded', () => {
     // Mock minimal config
-    global.Config = {
+    this.Config = {
       get: (key) => key === 'SPREADSHEET_ID' ? 'test-id' : 'Config'
     };
     
-    global.SpreadsheetApp = {
+    this.SpreadsheetApp = {
       openById: () => ({
         getSheetByName: () => ({
           getDataRange: () => ({
@@ -232,11 +232,11 @@ function runPerformanceTests() {
       largeDataset.rows.push([`user${i}@example.com`, `calendar${i}@gmail.com`]);
     }
     
-    global.Config = {
+    this.Config = {
       get: (key) => key === 'SPREADSHEET_ID' ? 'test-id' : 'Config'
     };
     
-    global.SpreadsheetApp = {
+    this.SpreadsheetApp = {
       openById: () => ({
         getSheetByName: () => ({
           getDataRange: () => ({
